@@ -9,7 +9,7 @@ class SimpleSQLTokenizer:
         'SEMICOLON', 'EQUALS', 'LESS', 'GREATER', 'LESS_EQUAL', 'GREATER_EQUAL',
         'NOT_EQUAL', 'NUMBER', 'STRING', 'COMMENT', 'LPAREN', 'RPAREN',
         'NULL', 'INT', 'NOT', 'DATETIME', 'PRIMARY', 'KEY', 'CHAR', 'IDENTITY',
-        'VARCHAR', 'ALTER', 'FOREIGN', 'IDENTIFIER'
+        'VARCHAR', 'ALTER', 'FOREIGN', 'ADD', 'CONSTRAINT', 'UNIQUE', 'IDENTIFIER'
     ]
 
     # Token definitions using regular expressions
@@ -51,6 +51,9 @@ class SimpleSQLTokenizer:
     t_VARCHAR = r'VARCHAR'
     t_ALTER = r'ALTER'
     t_FOREIGN = r'FOREIGN'
+    t_ADD = r'ADD'
+    t_CONSTRAINT = r'CONSTRAINT'
+    t_UNIQUE = r'UNIQUE'
 
     # Regular expression rules for complex tokens
     t_ignore = ' \t'  # Ignored characters (spaces and tabs)
@@ -121,7 +124,10 @@ class SimpleSQLTokenizer:
         'IDENTITY': 'IDENTITY',
         'VARCHAR': 'VARCHAR',
         'ALTER': 'ALTER',
-        'FOREIGN': 'FOREIGN'
+        'FOREIGN': 'FOREIGN',
+        'ADD': 'ADD',
+        'CONSTRAINT': 'CONSTRAINT',
+        'UNIQUE': 'UNIQUE'
     }
 
     def __init__(self):
@@ -150,22 +156,26 @@ class App:
 
         # SQL input text area
         sql_label = ctk.CTkLabel(self.root, text="Enter SQL statement:")
-        sql_label.pack(padx=10, pady=(10, 0))
+        sql_label.pack(padx=10, pady=(10, 0), anchor='w')
 
         self.sql_entry = ctk.CTkTextbox(self.root, height=100)
         self.sql_entry.pack(padx=10, pady=10, fill="both", expand=True)
 
+        # Frame for buttons
+        button_frame = ctk.CTkFrame(self.root)
+        button_frame.pack(padx=10, pady=(5, 0), anchor='w',fill='x')
+
         # Tokenize button
-        tokenize_button = ctk.CTkButton(self.root, text="Tokenize", command=self.tokenize_input)
-        tokenize_button.pack(pady=(5, 0))
+        tokenize_button = ctk.CTkButton(button_frame, text="Tokenize", command=self.tokenize_input,height=40)
+        tokenize_button.pack(side='left', padx=(0, 10), pady=5,fill='x',expand='true')
 
         # Clear button
-        clear_button = ctk.CTkButton(self.root, text="Clear", command=self.clear_output)
-        clear_button.pack(pady=(5, 10))
+        clear_button = ctk.CTkButton(button_frame, text="Clear", command=self.clear_output,height=40)
+        clear_button.pack(side='right', pady=5,fill='x',expand='true')
 
         # Output text area
         output_label = ctk.CTkLabel(self.root, text="Tokens:")
-        output_label.pack(padx=10, pady=(10, 0))
+        output_label.pack(padx=10, pady=(10, 0), anchor='w')
 
         self.output = ctk.CTkTextbox(self.root, height=200)
         self.output.pack(padx=10, pady=10, fill="both", expand=True)
@@ -183,7 +193,6 @@ class App:
 
     def run(self):
         self.root.mainloop()
-
 
 # Run the GUI
 app = App()
